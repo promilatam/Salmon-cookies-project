@@ -1,143 +1,110 @@
 'use strict';
 
+//CONSTRUCTOR
+function Stores(name, minCustomerPerHour, maxCustomersPerHour, avgCookiePerSale) {
 
-//for 1st and pike location 
-var storeUlEl = document.getElementById('store-container');
-
-var CookiesForPikeLocation = {
-   Location : '1st and pike',
-   MinCust : 23,
-  MaxCust : 65,
-   AvgCookiesSales : 6.3,
-   totalPerHour : [],
-};
-
-CookiesForPikeLocation.calculateCustomerPerOneHour = function(){
-  var customers = math.floor(Math.random() * (this.MaxCust - this.MaxCust)) + this.MaxCust;
-  return customers
-};
-
-CookiesForPikeLocation.calculateCustomerPerOneHour = function(){
-  var customersInHour = this.calculateCustomerPerOneHour();
-  var cookies = this.AvgCookiesSales * customersInHour;
-  return Math.ceil(cookies);
-};
-
-
-CookiesForPikeLocation.calculateCustomerPerOneHour = function(){
-  var total = 0;
-  for(var i = 0; i < 15; i++){
-    var totalInPerHour = this.calculateCustomerPerOneHour();
-    this.totalPerHour.push(totalInPerHour);
-    total += totalInPerHour;
-  }
-  this.total = total;
-  console.log(this.totalPerHour)
-};
-
-//outline li to the parent ul
-CookiesForPikeLocation.makeList = function(){
-  if(this.totalPerHour.length === 0) {
-    this.calculateCustomerPerOneHour();
-  }
-  //2nd step
-  var LocationLiEl = document.createElement(li);
-
-  //3rd
-  //2nd
-
-  var h2El = document.createElement('h2');
-  h2El.textContent = this.Location;
-  LocationLiEl.appendchild(h2El);
-
-
-  var ulEl = document.createElement('ul');
-
-  for(var j = 0; j < this.totalPerHour.length; j++){
-    var hourLiEl = document.createElement('li');
-    var hour = j + 6 + '00';
-    hour = hour.padstart(5, '0');
-    hourLiEl.textContent = hour + this.totalPerHour[j] + 'cookies';
-    ulEl.appendChild(hourLiEl);
-  }
-
-
+  //Properties
+  this.name = name;
+  this.minCustomerPerHour = minCustomerPerHour;
+  this.maxCustomersPerHour = maxCustomersPerHour;
+  this.avgCookiePerSale = avgCookiePerSale;
+  this.sales = [];
 }
 
-// for seaTac Aiport location
+//FUNCTION DEFINITION FOR THE CONSTRUCTOR
 
-var storeUlEl = document.getElementById('store-container');
-
-var CookiesForSeaTacLocation = {
-   Location : 'Seatac Airport',
-   MinCust : 3,
-  MaxCust : 24,
-   AvgCookiesSales : 1.3,
-   totalPerHour : [],
+/* Generate random numbers of customers based on the flow of maximum and minimum customers per hour */
+Stores.prototype.generateRandomCustomers = function() {
+  var result = Math.floor(Math.random() * this.maxCustomersPerHour) + this.minCustomerPerHour; //Generate random numbers betn: MIN & MAX
+  return result;
 };
 
-CookiesForSeaTacLocation.calculateCustomerPerOneHour = function(){
-  var customers = math.floor(Math.random() * (this.maxCust - this.MinCust)) + this.MinCust;
-  return customers
-};
+/* Generates total sales and puts into results of each stores */
+Stores.prototype.generateSalesForecast = function() {
+  var calculation; //Number of cookies sold based on average cookies and random number of customers
+  var startTime = 6; //Military Standard hours for 6 am
+  var endTime = 20; //Military Standard hours for 8 pm
+  var totalSales = 0; //Sum of total cookies from start to end time
 
-CookiesForSeaTacLocation.calculateCustomerPerOneHour = function(){
-  var customersInHour = this.calculateCustomerPerOneHour();
-  var cookies = this.AvgCookiesSales * customersInHour;
-  return Math.ceil(cookies);
-};
-
-
-CookiesForSeaTacLocation.calculateCustomerPerOneHour = function(){
-  var total = 0;
-  for(var i = 0; i < 15; i++){
-    var totalInPerHour = this.calculateCustomerPerOneHour();
-    this.totalPerHour.push(totalInPerHour);
-    total += totalInPerHour;
+  for (var j = startTime; j <= endTime; j++) {
+    calculation = Math.round (this.avgCookiePerSale * this.generateRandomCustomers()); //Calculates and round to nearest integer
+    totalSales += calculation;
+    this.sales.push(calculation);
   }
-  this.total = total;
-  console.log(this.totalPerHour)
+  this.sales.push(totalSales); //Make a final push of total cookies
+
 };
 
-//outline li to the parent ul
-CookiesForSeaTacLocation.makeList = function(){
-  if(this.totalPerHour.length === 0) {
-    this.calculateCustomerPerOneHour();
-  }
-  //2nd step
-  var LocationLiEl = document.createElement(li);
-
-  //3rd
-  //2nd
-
-  var h2El = document.createElement('h2');
-  h2El.textContent = this.Location;
-  LocationLiEl.appendchild(h2El);
-
-
-  var ulEl = document.createElement('ul');
-
-  for(var j = 0; j < this.totalPerHour.length; j++){
-    var hourLiEl = document.createElement('li');
-    var hour = j + 6 + '00';
-    hour = hour.padstart(5, '0');
-    hourLiEl.textContent = hour + this.totalPerHour[j] + 'cookies';
-    ulEl.appendChild(hourLiEl);
+/*  Rendering function for the store object */
+Stores.prototype.generateRendering = function() {
+  var tableEl = document.getElementById('sales-forecast');
+  var trEl = document.createElement('tr');
+  var tdNameEl = document.createElement('td');
+  tdNameEl.textContent = this.name;
+  trEl.appendChild(tdNameEl);
+  tableEl.appendChild(trEl);
+  var tdEl = [];
+  for (var i = 0; i < this.sales.length; i++) {
+    tdEl[i] = document.createElement('td');
+    tdEl[i].textContent = this.sales[i];
+    trEl.appendChild(tdEl[i]);
+    tableEl.appendChild(trEl);
   }
 
+};
+//MAIN FUNCTION TO RUN THE SCRIPT
+function generateStoreData() {
+//Create Objects and store in array of stores
+  var arrayOfStores = [];
+  var totalOfColumns = []; //Stores total of the column
+  arrayOfStores.push(new Stores('First & Pike', 23, 65, 6.3));
+  arrayOfStores.push(new Stores('SeaTac Airport', 3, 24, 1.2));
+  arrayOfStores.push(new Stores('Seattle Center', 11, 38, 3.7));
+  arrayOfStores.push(new Stores('Capitol Hill', 20, 38, 2.3));
+  arrayOfStores.push(new Stores('Alki', 2, 16, 4.6));
+
+  /* Generate Sales Forecast and display elements on table for each stores  */
+  for (var i = 0; i < arrayOfStores.length; i++) {
+    arrayOfStores[i].generateSalesForecast();
+    arrayOfStores[i].generateRendering();
+  }
+
+  /* Generates total of the columns in the display and store in the array*/
+  for (i = 0; i < arrayOfStores[0].sales.length; i++) {
+    var total = 0;
+    for (var j = 0; j < arrayOfStores.length; j++) {
+      total += arrayOfStores[j].sales[i];
+    }
+    console.log(total);
+    totalOfColumns.push(total);
+
+  }
+
+  /* Final Rendering for the 'Totals' row */
+  var tableEl = document.getElementById('sales-forecast');
+  var trEl = document.createElement('tr');
+  var tdNameEl = document.createElement('td');
+  tdNameEl.textContent = 'Totals';
+  trEl.appendChild(tdNameEl);
+  tableEl.appendChild(trEl);
+  var tdEl = [];
+  for (i = 0; i < totalOfColumns.length; i++) {
+    tdEl[i] = document.createElement('td');
+    tdEl[i].textContent = totalOfColumns[i];
+    trEl.appendChild(tdEl[i]);
+    tableEl.appendChild(trEl);
+  }
+
+  //test to validate data in console
+  for (i = 0; i < arrayOfStores.length; i++) {
+    console.log(arrayOfStores[i].name);
+    for (j = 0; j < 16; j++) {
+      console.log(arrayOfStores[i].sales[j]);
+    }
+  }
 
 }
-
-function makePage(){
-  CookiesForPikeLocation.makeList();
-  CookiesForSeaTacLocation.makeList();
-
-}
-
-makePage();
-
-
-
+generateStoreData();
 
 
 
