@@ -9,6 +9,7 @@ function Stores(name, minCustomerPerHour, maxCustomersPerHour, avgCookiePerSale)
   this.maxCustomersPerHour = maxCustomersPerHour;
   this.avgCookiePerSale = avgCookiePerSale;
   this.sales = [];
+  this.storeName = [];
 }
 
 //FUNCTION DEFINITION FOR THE CONSTRUCTOR
@@ -26,6 +27,7 @@ Stores.prototype.generateSalesForecast = function() {
   var endTime = 20; //Military Standard hours for 8 pm
   var totalSales = 0; //Sum of total cookies from start to end time
 
+  // TODO: revisit to fix totals
   for (var j = startTime; j <= endTime; j++) {
     calculation = Math.round (this.avgCookiePerSale * this.generateRandomCustomers()); //Calculates and round to nearest integer
     totalSales += calculation;
@@ -104,6 +106,19 @@ function generateStoreData() {
   }
 
 }
+
+var form = document.getElementById('store-name');
+
+var handleFormSubmit = function (event){
+  var location = event.target['location'].value;
+  var minCustomer = event.target['min-customer'].value;
+  var maxCustomer = event.target['max-customer'].value;
+  var avgCookies = event.target['avg-cookies'].value;
+  
+  form.addEventListener('submit', handleFormSubmit);
+  console.log(event.target['location']);
+}
+
 generateStoreData();
 
 
