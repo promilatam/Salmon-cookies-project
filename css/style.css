@@ -1,19 +1,49 @@
 nav li {
-    float: left;
-    background-color: antiquewhite;
-    height: 150;
-    margin-left: 60px;
+  float : left;
+  height : 20px;
+  background-color :rgb(25, 25, 223);
+  margin-right : 20px;
 }
 
-nav {
-  padding: 90px
+ul {
+  list-style: none;
 }
 
+img {
+  width: 400px;
+}
 
+main ul {
+  width: 200px;
+  overflow: hidden;
+  padding: 0;
+  margin: auto;
+}
 
-  img {
-    width: 1300px;
-    height: 200px;
-    margin-left: 50px
-  }
+#stores-info {
+  width: 500px;
+  margin: auto;
+  float: inline-start;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: fit-content;
+}
+
+td, th {
+  border: 1px solid #492f2f;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #08e966;
+}
+
+#sales-forecast {
+  background-color:rgb(224, 172, 26)
+}
+
 
